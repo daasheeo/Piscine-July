@@ -1,0 +1,26 @@
+tenemos un diccionario estandar al que accedemos con open() y read() (y close() para cerrar al final).
+si recibimos un numero de argumentos que no sea 2 o 3 (incluyendo ./a.out), devolvemos "Error. Invalid number of arguments."
+en el caso de tener dos argumentos dados, el primero es el filename del diccionario que usaremos.
+nuestro ULTIMO parametro es siempre el numero que necesita convertirse a texto (dado como un string) -> debemos comprobar que
+todos los caracteres de este string son numericos ('0' a '9'); si alguno no lo es (unsigned int), devolvemos "Error\n".
+tenemos que usar malloc y free apropiadamente.
+
+creo que lo que deberiamos hacer primero es:
+- leer el string de numeros desde la izquierda y eliminar todos los ceros antes de un numero que no sea cero
+- strlen al string numerico tras esto
+- no podemos esperar crear un array final con size suficiente predefinido (seria demasiada memoria, y no podemos hacer VLAs)
+  asi que lo suyo seria que vayamos creando arrays INICIALIZADOS de tamaño suficiente para la PALABRA mas larga, e ir concatenando
+  todo a un array (de strings [palabras]) final con todas nuestras palabras.
+- una vez eliminados los ceros a la izquierda, lo que mas ventaja nos da es leer el string numerico de DERECHA A IZQUIERDA. esto
+  nos hace mas facil estructurar el array ya que no tenemos que tener en cuenta los siguientes numeros excepto en el caso de 10
+  a 19 (cuando strlen - 1 es igual a 1, independientemente de cuantas cifras tenga el numero)
+- cuando busquemos en el diccionario tendremos que hacerlo buscando la estructura de [numero(x):] donde x es un numero
+  indeterminado de espacios (tras los dos puntos y en el texto del numero tambien puede haber un numero indeterminado de espacios
+  que skipearemos al imprimir PERO NO ALTERAREMOS EN EL DICT)
+- cualquier error con respecto al diccionario (al abrir, al leer, faltan claves, no se puede escribir el numero con las claves
+  dadas, etc) devolveremos "Dict Error\n".
+- separaremos cada palabra por un espacio de otra, usar guiones comas y and's son extras y es complicacion innecesaria (los
+  extras en general traen un grado demasiado alto de complicacion innecesaria lmao)
+
+  "327" -> seven twenty hundred three -> desde el final -> three hundred twenty seven
+  char - '0'
